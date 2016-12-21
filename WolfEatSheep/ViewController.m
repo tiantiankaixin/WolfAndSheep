@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "UIView+Extension.h"
-#import "GameView.h"
+#import "MLSocketManager.h"
 
 @interface ViewController ()
 
@@ -19,10 +18,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    GameView *gameView = [[GameView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
-    gameView.isPlaySelf = YES;
-    gameView.center = CGPointMake(self.view.width / 2, self.view.height / 2);
-    [self.view addSubview:gameView];
+    MLSocketManager *manager = [MLSocketManager shareManager];
+    [manager startServer];
+    [manager beginSearchServer];
     // Do any additional setup after loading the view, typically from a nib.
 }
 

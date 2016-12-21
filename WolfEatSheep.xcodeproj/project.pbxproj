@@ -19,6 +19,8 @@
 		207FB9BD1E09062B00DCC13A /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9BC1E09062B00DCC13A /* UIView+Extension.m */; };
 		207FB9C01E09078D00DCC13A /* NodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9BF1E09078D00DCC13A /* NodeView.m */; };
 		207FB9C31E0907B900DCC13A /* NodeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9C21E0907B900DCC13A /* NodeModel.m */; };
+		207FB9C71E0A507D00DCC13A /* MLSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9C61E0A507D00DCC13A /* MLSocketManager.m */; };
+		207FB9CA1E0A7CF900DCC13A /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9C91E0A7CF900DCC13A /* GameViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,10 @@
 		207FB9BF1E09078D00DCC13A /* NodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeView.m; sourceTree = "<group>"; };
 		207FB9C11E0907B900DCC13A /* NodeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeModel.h; sourceTree = "<group>"; };
 		207FB9C21E0907B900DCC13A /* NodeModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeModel.m; sourceTree = "<group>"; };
+		207FB9C51E0A507D00DCC13A /* MLSocketManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLSocketManager.h; sourceTree = "<group>"; };
+		207FB9C61E0A507D00DCC13A /* MLSocketManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLSocketManager.m; sourceTree = "<group>"; };
+		207FB9C81E0A7CF900DCC13A /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		207FB9C91E0A7CF900DCC13A /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +124,8 @@
 				207FB9841E09048C00DCC13A /* AppDelegate.m */,
 				207FB9861E09048C00DCC13A /* ViewController.h */,
 				207FB9871E09048C00DCC13A /* ViewController.m */,
+				207FB9C81E0A7CF900DCC13A /* GameViewController.h */,
+				207FB9C91E0A7CF900DCC13A /* GameViewController.m */,
 				207FB9891E09048C00DCC13A /* Main.storyboard */,
 				207FB98C1E09048C00DCC13A /* Assets.xcassets */,
 				207FB98E1E09048C00DCC13A /* LaunchScreen.storyboard */,
@@ -156,6 +164,7 @@
 		207FB9B31E09055900DCC13A /* WolfSheep */ = {
 			isa = PBXGroup;
 			children = (
+				207FB9C41E0A506400DCC13A /* socket */,
 				207FB9BA1E09062B00DCC13A /* help */,
 				207FB9B41E09056500DCC13A /* GameView.h */,
 				207FB9B51E09056500DCC13A /* GameView.m */,
@@ -174,6 +183,15 @@
 				207FB9BC1E09062B00DCC13A /* UIView+Extension.m */,
 			);
 			path = help;
+			sourceTree = "<group>";
+		};
+		207FB9C41E0A506400DCC13A /* socket */ = {
+			isa = PBXGroup;
+			children = (
+				207FB9C51E0A507D00DCC13A /* MLSocketManager.h */,
+				207FB9C61E0A507D00DCC13A /* MLSocketManager.m */,
+			);
+			path = socket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,8 +328,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				207FB9C31E0907B900DCC13A /* NodeModel.m in Sources */,
+				207FB9C71E0A507D00DCC13A /* MLSocketManager.m in Sources */,
 				207FB9BD1E09062B00DCC13A /* UIView+Extension.m in Sources */,
 				207FB9881E09048C00DCC13A /* ViewController.m in Sources */,
+				207FB9CA1E0A7CF900DCC13A /* GameViewController.m in Sources */,
 				207FB9C01E09078D00DCC13A /* NodeView.m in Sources */,
 				207FB9851E09048C00DCC13A /* AppDelegate.m in Sources */,
 				207FB9B61E09056500DCC13A /* GameView.m in Sources */,
@@ -545,6 +565,7 @@
 				207FB9AC1E09048C00DCC13A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		207FB9AD1E09048C00DCC13A /* Build configuration list for PBXNativeTarget "WolfEatSheepTests" */ = {
 			isa = XCConfigurationList;
@@ -553,6 +574,7 @@
 				207FB9AF1E09048C00DCC13A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		207FB9B01E09048C00DCC13A /* Build configuration list for PBXNativeTarget "WolfEatSheepUITests" */ = {
 			isa = XCConfigurationList;
@@ -561,6 +583,7 @@
 				207FB9B21E09048C00DCC13A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
