@@ -8,11 +8,25 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "NodeModel.h"
+
+@protocol MLSocketManagerDelegate <NSObject>
+
+- (void)updatePlayerList:(NSMutableArray *)playerList;
+- (void)connectSuccess;
+
+@end
 
 @interface MLSocketManager : NSObject
+
+@property (nonatomic, weak) id<MLSocketManagerDelegate> m_delegate;
 
 + (MLSocketManager *)shareManager;
 - (void)startServer;
 - (void)beginSearchServer;
+//MARK: fuction
+- (void)connectService:(NSNetService *)service;
++ (NodeType)roleType;
+- (void)sendMessage:(NSString *)message;
 
 @end

@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GameView.h"
 
 @interface GameViewController : UIViewController
+
+@property (nonatomic, assign) NodeType type;
 
 + (GameViewController *)gameVC;
 

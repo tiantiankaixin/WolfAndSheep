@@ -261,6 +261,7 @@
 				TargetAttributes = {
 					207FB97C1E09048C00DCC13A = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 8VGDP5336E;
 						ProvisioningStyle = Automatic;
 					};
 					207FB9951E09048C00DCC13A = {
@@ -482,6 +483,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 8VGDP5336E;
 				INFOPLIST_FILE = WolfEatSheep/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = haowai.WolfEatSheep;
@@ -493,6 +495,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 8VGDP5336E;
 				INFOPLIST_FILE = WolfEatSheep/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = haowai.WolfEatSheep;

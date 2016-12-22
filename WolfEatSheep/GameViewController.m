@@ -8,9 +8,11 @@
 
 #import "GameViewController.h"
 #import "UIView+Extension.h"
-#import "GameView.h"
+#import "MLSocketManager.h"
 
-@interface GameViewController ()
+@interface GameViewController ()<GameViewDelegate>
+
+@property (nonatomic, weak) GameView *gameView;
 
 @end
 
@@ -25,6 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     [self setUpGameView];
     // Do any additional setup after loading the view.
 }
@@ -32,9 +35,18 @@
 - (void)setUpGameView
 {
     GameView *gameView = [[GameView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
-    gameView.isPlaySelf = YES;
+    gameView.m_delegate = self;
+    gameView.role = [MLSocketManager roleType];
     gameView.center = CGPointMake(self.view.width / 2, self.view.height / 2);
     [self.view addSubview:gameView];
+    self.gameView = gameView;
+}
+
+#pragma mark - GameViewDelegate
+- (void)exChangeIdx:(NSUInteger)idx withIdx:(NSUInteger)idx1
+{
+    NSString *message = [NSString stringWithFormat:@"%zd+%zd",idx,idx1];
+    [[MLSocketManager shareManager] sendMessage:message];
 }
 
 - (void)didReceiveMemoryWarning

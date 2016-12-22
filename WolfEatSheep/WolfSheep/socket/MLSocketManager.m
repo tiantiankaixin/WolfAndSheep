@@ -10,6 +10,7 @@
 
 static MLSocketManager *manager = nil;
 static NSString *kWiTapBonjourType = @"_witap2._tcp.";
+#define EndStr @"E"
 
 @interface MLSocketManager()<NSNetServiceDelegate,NSNetServiceBrowserDelegate,NSStreamDelegate>
 
@@ -18,8 +19,11 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
 @property (nonatomic, strong) NSInputStream *inputStream;
 @property (nonatomic, strong) NSOutputStream *outputStream;
 @property (nonatomic, assign) NSUInteger streamOpenCount;
-
-@property (nonatomic, strong, readwrite) NSNetServiceBrowser *browser;
+@property (nonatomic, assign) NodeType type;
+//服务搜寻
+@property (nonatomic, strong) NSNetServiceBrowser *browser;
+@property (nonatomic, strong) NSMutableArray<NSNetService*> *services;
+@property (nonatomic, strong) NSMutableString *receiveStr;
 
 @end
 
@@ -56,6 +60,15 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
 
     }
     return _browser;
+}
+
+- (NSMutableArray<NSNetService *> *)services
+{
+    if (_services == nil)
+    {
+        _services = [NSMutableArray array];
+    }
+    return _services;
 }
 
 //MARK: 开启服务
@@ -113,6 +126,7 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
             self.outputStream = outputStream;
             
             [self openStreams];
+            self.type = sheep;
         }
     }];
 }
@@ -128,17 +142,44 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
 #pragma unused(sender)
 #pragma unused(errorDict)
     assert(NO);
+    NSLog(@"服务已关闭");
 }
 
 //MARK: NSNetServiceBrowserDelegate
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser didRemoveService:(NSNetService *)service moreComing:(BOOL)moreComing
 {
-   
+    if([browser isEqual:self.browser])
+    {
+        if (![service isEqual:self.server] && [self.services indexOfObject:service] != NSNotFound)
+        {
+            [self.services removeObject:service];
+        }
+    }
+    if (!moreComing)//移除完毕
+    {
+        if([self.m_delegate respondsToSelector:@selector(updatePlayerList:)])
+        {
+            [self.m_delegate updatePlayerList:[NSMutableArray arrayWithArray:self.services]];
+        }
+    }
 }
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser didFindService:(NSNetService *)service moreComing:(BOOL)moreComing
 {
-    
+    if([browser isEqual:self.browser])
+    {
+        if (![service isEqual:self.server] && [self.services indexOfObject:service] == NSNotFound)
+        {
+            [self.services addObject:service];
+        }
+    }
+    if (!moreComing && self.services.count > 0)//加入完毕
+    {
+        if([self.m_delegate respondsToSelector:@selector(updatePlayerList:)])
+        {
+            [self.m_delegate updatePlayerList:[NSMutableArray arrayWithArray:self.services]];
+        }
+    }
 }
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser didNotSearch:(NSDictionary *)errorDict
@@ -152,14 +193,16 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
     assert(self.inputStream != nil);            // streams must exist but aren't open
     assert(self.outputStream != nil);
     assert(self.streamOpenCount == 0);
-    
-    [self.inputStream  setDelegate:self];
-    [self.inputStream  scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.inputStream  open];
-    
-    [self.outputStream setDelegate:self];
-    [self.outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.outputStream open];
+    dispatch_async(dispatch_get_main_queue(), ^{
+       
+        [self.inputStream  setDelegate:self];
+        [self.inputStream  scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [self.inputStream  open];
+        
+        [self.outputStream setDelegate:self];
+        [self.outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [self.outputStream open];
+    });
 }
 
 - (void)closeStreams
@@ -181,19 +224,24 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
 {
 #pragma unused(stream)
     
-    switch(eventCode) {
-            
-        case NSStreamEventOpenCompleted: {
+    switch(eventCode)
+    {
+        case NSStreamEventOpenCompleted:
+        {
             self.streamOpenCount += 1;
             assert(self.streamOpenCount <= 2);
-            
             // Once both streams are open we hide the picker and the game is on.
-            
-            if (self.streamOpenCount == 2) {
+            if (self.streamOpenCount == 2)
+            {
                 //[self dismissPicker];
                 [self.server stop];
                 self.isServerStarted = NO;
                 //self.registeredName = nil;
+                //FIXME: 连接成功
+                if ([self.m_delegate respondsToSelector:@selector(connectSuccess)])
+                {
+                    [self.m_delegate connectSuccess];
+                }
             }
         } break;
             
@@ -202,30 +250,34 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
             // do nothing
         } break;
             
-        case NSStreamEventHasBytesAvailable: {
-            uint8_t     b;
-            NSInteger   bytesRead;
-            
+        case NSStreamEventHasBytesAvailable:
+        {
+            uint8_t b;
+            NSInteger bytesRead;
             assert(stream == self.inputStream);
-            
             bytesRead = [self.inputStream read:&b maxLength:sizeof(uint8_t)];
-            if (bytesRead <= 0) {
+            if (bytesRead <= 0)
+            {
                 // Do nothing; we'll handle EOF and error in the
                 // NSStreamEventEndEncountered and NSStreamEventErrorOccurred case,
                 // respectively.
-            } else {
-                // We received a remote tap update, forward it to the appropriate view
-                /*
-                if ( (b >= 'A') && (b < ('A' + kTapViewControllerTapItemCount))) {
-                    [self.tapViewController remoteTouchDownOnItem:b - 'A'];
-                } else if ( (b >= 'a') && (b < ('a' + kTapViewControllerTapItemCount))) {
-                    [self.tapViewController remoteTouchUpOnItem:b - 'a'];
-                } else {
-                    // Ignore the bogus input.  This is important because it allows us
-                    // to telnet in to the app in order to test its behaviour.  telnet
-                    // sends all sorts of odd characters, so ignoring them is a good thing.
+            }
+            else
+            {
+                NSString *message = [[NSString alloc] initWithCString:(char *)&b encoding:NSUTF8StringEncoding];
+                if ([message isEqualToString:EndStr])
+                {
+                    NSLog(@"=====%@",self.receiveStr);
+                    self.receiveStr = nil;
                 }
-                 */
+                else
+                {
+                    if (!self.receiveStr)
+                    {
+                        self.receiveStr = [[NSMutableString alloc] init];
+                    }
+                    [self.receiveStr appendString:message];
+                }
             }
         } break;
             
@@ -240,5 +292,45 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
     }
 }
 
+- (void)sendMessage:(NSString *)message
+{
+    assert(self.streamOpenCount == 2);
+    message = [NSString stringWithFormat:@"%@%@",message,EndStr];
+    if ([self.outputStream hasSpaceAvailable] )
+    {
+        NSInteger bytesWritten;
+        bytesWritten = [self.outputStream write:(const uint8_t *)[message cStringUsingEncoding:NSUTF8StringEncoding] maxLength:sizeof(message)];
+        if (bytesWritten != sizeof(message))
+        {
+        }
+    }
+}
+
+#pragma mark - 连接service
+- (void)connectService:(NSNetService *)service
+{
+    BOOL                success;
+    NSInputStream *     inStream;
+    NSOutputStream *    outStream;
+    assert(self.inputStream == nil);
+    assert(self.outputStream == nil);
+    success = [service getInputStream:&inStream outputStream:&outStream];
+    if ( ! success )
+    {
+        
+    }
+    else
+    {
+        self.type = wolf;
+        self.inputStream  = inStream;
+        self.outputStream = outStream;
+        [self openStreams];
+    }
+}
+
++ (NodeType)roleType
+{
+    return [MLSocketManager shareManager].type;
+}
 
 @end

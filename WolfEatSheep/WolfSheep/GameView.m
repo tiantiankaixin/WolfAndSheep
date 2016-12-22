@@ -250,6 +250,12 @@ typedef NS_ENUM(NSInteger,LineDirection){
     view1.nodeModel = selectModel;
     view2.nodeModel = tapModel;
     [self layoutNodeView];
+    NSUInteger idx1 = [self.nodeViewArray indexOfObject:view1];
+    NSUInteger idx2 = [self.nodeViewArray indexOfObject:view2];
+    if ([self.m_delegate respondsToSelector:@selector(exChangeIdx:withIdx:)])
+    {
+        [self.m_delegate exChangeIdx:idx1 withIdx:idx2];
+    }
 }
 
 @end
