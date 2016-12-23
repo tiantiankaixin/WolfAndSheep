@@ -73,6 +73,16 @@ typedef NS_ENUM(NSInteger,LineDirection){
     return lineView;
 }
 
+- (void)setRole:(NodeType)role
+{
+    _role = role;
+    if (role == wolf)
+    {
+        self.transform = CGAffineTransformMakeRotation(M_PI);
+    }
+}
+
+//MARK: init
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame])
@@ -165,13 +175,15 @@ typedef NS_ENUM(NSInteger,LineDirection){
     [self createQiPan];
     //3、生成棋子
     [self createNodeView];
-    self.role = wolf;
-    self.isCanMove = YES;
 }
 
 //MARK: NodeViewDelegate
 - (void)tapWithView:(NodeView *)nodeView
 {
+    if (!self.isCanMove)
+    {
+        return;
+    }
     NodeModel *tapModel = nodeView.nodeModel;
     NodeType type = tapModel.type;
     BOOL isSelect = tapModel.isSelect;
@@ -210,12 +222,12 @@ typedef NS_ENUM(NSInteger,LineDirection){
             [self exChangePlayRole];//交换角色
             if (type == empty)//点了个空白的地方
             {
-                [self exchangeView:nodeView withView:selectNodeView];
+                [self exchangeView:nodeView withView:selectNodeView isNeedSendMessage:YES];
             }
             else
             {
                 [nodeView setType:empty];
-                [self exchangeView:nodeView withView:selectNodeView];
+                [self exchangeView:nodeView withView:selectNodeView isNeedSendMessage:YES];
             }
             [selectNodeView selectView:NO];
             [self.selectNodeViewArray removeObject:selectNodeView];
@@ -238,7 +250,7 @@ typedef NS_ENUM(NSInteger,LineDirection){
     }
 }
 
-- (void)exchangeView:(NodeView *)view1 withView:(NodeView *)view2
+- (void)exchangeView:(NodeView *)view1 withView:(NodeView *)view2 isNeedSendMessage:(BOOL)isNeed
 {
     NodeModel *tapModel = view1.nodeModel;
     NodeModel *selectModel = view2.nodeModel;
@@ -249,13 +261,34 @@ typedef NS_ENUM(NSInteger,LineDirection){
     
     view1.nodeModel = selectModel;
     view2.nodeModel = tapModel;
-    [self layoutNodeView];
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        [self layoutNodeView];
+    }];
     NSUInteger idx1 = [self.nodeViewArray indexOfObject:view1];
     NSUInteger idx2 = [self.nodeViewArray indexOfObject:view2];
-    if ([self.m_delegate respondsToSelector:@selector(exChangeIdx:withIdx:)])
+    if ([self.m_delegate respondsToSelector:@selector(exChangeIdx:withIdx:)] && isNeed)
     {
         [self.m_delegate exChangeIdx:idx1 withIdx:idx2];
     }
+}
+
+- (void)exchangeWithIdx1:(NSInteger)idx1 idx2:(NSInteger)idx2
+{
+    NodeView *view1 = [self.nodeViewArray objectAtIndex:idx1];
+    NodeView *view2 = [self.nodeViewArray objectAtIndex:idx2];
+    if (view1.nodeModel.type != empty && view2.nodeModel.type != empty)
+    {
+        if(view1.nodeModel.type == sheep)
+        {
+            [view1 setType:empty];
+        }
+        else if (view2.nodeModel.type == sheep)
+        {
+            [view2 setType:empty];
+        }
+    }
+    [self exchangeView:view1 withView:view2 isNeedSendMessage:NO];
 }
 
 @end

@@ -264,19 +264,27 @@ static NSString *kWiTapBonjourType = @"_witap2._tcp.";
             }
             else
             {
-                NSString *message = [[NSString alloc] initWithCString:(char *)&b encoding:NSUTF8StringEncoding];
-                if ([message isEqualToString:EndStr])
+                NSString *message = [NSString stringWithCString:(char *)&b encoding:NSUTF8StringEncoding];
+                if (message.length == 2)
                 {
-                    NSLog(@"=====%@",self.receiveStr);
-                    self.receiveStr = nil;
-                }
-                else
-                {
-                    if (!self.receiveStr)
+                    NSString *subString = [message substringWithRange:NSMakeRange(0, 1)];
+                    if ([subString isEqualToString:EndStr])
                     {
-                        self.receiveStr = [[NSMutableString alloc] init];
+                        NSLog(@"receive message: %@",self.receiveStr);
+                        if ([self.m_delegate respondsToSelector:@selector(receiveMessage:)])
+                        {
+                            [self.m_delegate receiveMessage:self.receiveStr];
+                        }
+                        self.receiveStr = nil;
                     }
-                    [self.receiveStr appendString:message];
+                    else
+                    {
+                        if (!self.receiveStr)
+                        {
+                            self.receiveStr = [[NSMutableString alloc] init];
+                        }
+                        [self.receiveStr appendString:subString];
+                    }
                 }
             }
         } break;

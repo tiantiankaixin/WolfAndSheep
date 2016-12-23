@@ -22,4 +22,6 @@
 @property (nonatomic, assign) BOOL isCanMove;
 @property (nonatomic, weak) id<GameViewDelegate> m_delegate;
 
+- (void)exchangeWithIdx1:(NSInteger)idx1 idx2:(NSInteger)idx2;
+
 @end

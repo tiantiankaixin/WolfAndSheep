@@ -12,8 +12,10 @@
 
 @protocol MLSocketManagerDelegate <NSObject>
 
+@optional
 - (void)updatePlayerList:(NSMutableArray *)playerList;
 - (void)connectSuccess;
+- (void)receiveMessage:(NSString *)message;
 
 @end
 
