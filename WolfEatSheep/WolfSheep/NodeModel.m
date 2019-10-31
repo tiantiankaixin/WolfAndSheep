@@ -12,7 +12,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"{%zd %zd %zd}",self.row,self.col,self.type];
+    return [NSString stringWithFormat:@"{%d %d %zd}",self.row,self.col,self.type];
 }
 
 - (TapType)tapTypeWithNode:(NodeModel *)node nodeList:(NSMutableArray *)nodeList
@@ -82,6 +82,11 @@
     node.col = self.col;
     self.row = row;
     self.col = col;
+}
+
+- (int)nodeIdx
+{
+    return 0;
 }
 
 @end

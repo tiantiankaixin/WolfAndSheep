@@ -13,15 +13,18 @@
 @interface GameViewController ()<GameViewDelegate,MLSocketManagerDelegate>
 
 @property (nonatomic, weak) GameView *gameView;
+@property (nonatomic, assign) MPlayType playType;
 
 @end
 
 @implementation GameViewController
 
-+ (GameViewController *)gameVC
++ (GameViewController *)gameVCWithPlayType:(MPlayType)type
 {
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    return [storyBoard instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+    GameViewController *gameVC = (GameViewController *)[storyBoard instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+    gameVC.playType = type;
+    return gameVC;
 }
 
 - (void)viewDidLoad
@@ -29,19 +32,21 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self setUpGameView];
-    // Do any additional setup after loading the view.
 }
 
 - (void)setUpGameView
 {
     GameView *gameView = [[GameView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+    gameView.isPlaySelf = YES;
     gameView.m_delegate = self;
-    gameView.role = [MLSocketManager roleType];
-    [MLSocketManager shareManager].m_delegate = self;
-    if (gameView.role == wolf)
-    {
-        gameView.isCanMove = YES;
-    }
+    gameView.role = wolf;
+    gameView.isCanMove = YES;
+//    gameView.role = [MLSocketManager roleType];
+//    [MLSocketManager shareManager].m_delegate = self;
+//    if (gameView.role == wolf)
+//    {
+//        gameView.isCanMove = YES;
+//    }
     gameView.center = CGPointMake(self.view.width / 2, self.view.height / 2);
     [self.view addSubview:gameView];
     self.gameView = gameView;
@@ -50,9 +55,9 @@
 #pragma mark - GameViewDelegate
 - (void)exChangeIdx:(NSUInteger)idx withIdx:(NSUInteger)idx1
 {
-    NSString *message = [NSString stringWithFormat:@"%zd+%zd",idx,idx1];
-    self.gameView.isCanMove = NO;
-    [[MLSocketManager shareManager] sendMessage:message];
+//    NSString *message = [NSString stringWithFormat:@"%zd+%zd",idx,idx1];
+//    self.gameView.isCanMove = NO;
+//    [[MLSocketManager shareManager] sendMessage:message];
 }
 
 #pragma mark - MLSocketManager delegate
@@ -66,6 +71,12 @@
         NSInteger idx2 = [[idxArray lastObject] integerValue];
         [self.gameView exchangeWithIdx1:idx1 idx2:idx2];
     }
+}
+
+- (IBAction)reStartBtnClick:(UIButton *)sender
+{
+    [self.gameView reStart];
+    self.gameView.role = wolf;
 }
 
 - (void)didReceiveMemoryWarning

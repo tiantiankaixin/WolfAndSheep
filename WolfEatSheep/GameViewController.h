@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "GameView.h"
+typedef NS_ENUM(NSInteger, MPlayType) {
+    
+    local_play,
+};
 
 @interface GameViewController : UIViewController
 
 @property (nonatomic, assign) NodeType type;
 
-+ (GameViewController *)gameVC;
++ (GameViewController *)gameVCWithPlayType:(MPlayType)type;
 
 @end

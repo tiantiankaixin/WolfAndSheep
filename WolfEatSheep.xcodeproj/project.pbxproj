@@ -21,6 +21,7 @@
 		207FB9C31E0907B900DCC13A /* NodeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9C21E0907B900DCC13A /* NodeModel.m */; };
 		207FB9C71E0A507D00DCC13A /* MLSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9C61E0A507D00DCC13A /* MLSocketManager.m */; };
 		207FB9CA1E0A7CF900DCC13A /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 207FB9C91E0A7CF900DCC13A /* GameViewController.m */; };
+		20EC29C4236AB60800F3D277 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20EC29C3236AB60800F3D277 /* MenuViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		207FB9C61E0A507D00DCC13A /* MLSocketManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLSocketManager.m; sourceTree = "<group>"; };
 		207FB9C81E0A7CF900DCC13A /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 		207FB9C91E0A7CF900DCC13A /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		20EC29C2236AB60800F3D277 /* MenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		20EC29C3236AB60800F3D277 /* MenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +125,8 @@
 				207FB9B31E09055900DCC13A /* WolfSheep */,
 				207FB9831E09048C00DCC13A /* AppDelegate.h */,
 				207FB9841E09048C00DCC13A /* AppDelegate.m */,
+				20EC29C2236AB60800F3D277 /* MenuViewController.h */,
+				20EC29C3236AB60800F3D277 /* MenuViewController.m */,
 				207FB9861E09048C00DCC13A /* ViewController.h */,
 				207FB9871E09048C00DCC13A /* ViewController.m */,
 				207FB9C81E0A7CF900DCC13A /* GameViewController.h */,
@@ -281,6 +286,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -337,6 +343,7 @@
 				207FB9851E09048C00DCC13A /* AppDelegate.m in Sources */,
 				207FB9B61E09056500DCC13A /* GameView.m in Sources */,
 				207FB9821E09048C00DCC13A /* main.m in Sources */,
+				20EC29C4236AB60800F3D277 /* MenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

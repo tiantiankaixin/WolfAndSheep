@@ -95,6 +95,10 @@ typedef NS_ENUM(NSInteger,LineDirection){
 //MARK: 生成数据源
 - (void)createDataSource
 {
+    if (self.nodeArray.count > 0)
+    {
+        [self.nodeArray removeAllObjects];
+    }
     for (int row = 0; row < 5; row++)
     {
         for (int col = 0; col < 5; col++)
@@ -145,6 +149,14 @@ typedef NS_ENUM(NSInteger,LineDirection){
 //MARK: 生成node view
 - (void)createNodeView
 {
+    if (self.nodeViewArray.count > 0)
+    {
+        for (NodeView *view in self.nodeViewArray)
+        {
+            [view removeFromSuperview];
+        }
+        [self.nodeViewArray removeAllObjects];
+    }
     for (NodeModel *node in self.nodeArray)
     {
         NodeView *view = [NodeView nodeWithModel:node];
@@ -264,15 +276,25 @@ typedef NS_ENUM(NSInteger,LineDirection){
     [UIView animateWithDuration:0.3 animations:^{
         
         [self layoutNodeView];
+        
+    } completion:^(BOOL finished) {
+        
+        NSUInteger idx1 = [self.nodeViewArray indexOfObject:view1];
+        NSUInteger idx2 = [self.nodeViewArray indexOfObject:view2];
+        if ([self.m_delegate respondsToSelector:@selector(exChangeIdx:withIdx:)] && isNeed)
+        {
+            [self.m_delegate exChangeIdx:idx1 withIdx:idx2];
+        }
     }];
-    NSUInteger idx1 = [self.nodeViewArray indexOfObject:view1];
-    NSUInteger idx2 = [self.nodeViewArray indexOfObject:view2];
-    if ([self.m_delegate respondsToSelector:@selector(exChangeIdx:withIdx:)] && isNeed)
-    {
-        [self.m_delegate exChangeIdx:idx1 withIdx:idx2];
-    }
 }
 
+//MARK: - help
+- (NodeType)getWiner
+{
+    return empty;
+}
+
+//MARK: - public func
 - (void)exchangeWithIdx1:(NSInteger)idx1 idx2:(NSInteger)idx2
 {
     NodeView *view1 = [self.nodeViewArray objectAtIndex:idx1];
@@ -289,6 +311,12 @@ typedef NS_ENUM(NSInteger,LineDirection){
         }
     }
     [self exchangeView:view1 withView:view2 isNeedSendMessage:NO];
+}
+
+- (void)reStart
+{
+    [self createDataSource];
+    [self createNodeView];
 }
 
 @end

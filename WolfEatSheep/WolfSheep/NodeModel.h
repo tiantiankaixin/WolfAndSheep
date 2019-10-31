@@ -31,5 +31,6 @@ typedef NS_ENUM(NSInteger,TapType){
 
 - (TapType)tapTypeWithNode:(NodeModel *)node nodeList:(NSMutableArray *)nodeList;
 - (void)exchangePositionWithNode:(NodeModel *)node;
+- (int)nodeIdx;
 
 @end
